@@ -25,12 +25,25 @@ $(document).ready(function() {
 
     var infoWindow = new google.maps.InfoWindow();
 
-    var stations;
+    var cameras;
     var markers = [];
+
+    $("#search").bind("search keyup", function() {
+        var searchString = $('#search').val().toLowerCase();
+        for(var index = 0; index < cameras.length; index++) {
+            var camera = cameras[index].cameralabel.toLowerCase();
+            var marker = markers[index];
+            if(camera.indexOf(searchString) != -1) {
+                marker.setMap(map);
+            } else {
+                marker.setMap(null);
+            }
+        }
+    });
 
     $.getJSON('http://data.seattle.gov/resource/65fc-btcc.json')
         .done(function(data, itemIndex) {
-            stations = data;
+            cameras = data;
             data.forEach(function(station) {
                 var marker = new google.maps.Marker({
                     position: {
